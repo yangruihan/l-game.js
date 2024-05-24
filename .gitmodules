@@ -1,0 +1,6 @@
+[submodule "libs/littlejs"]
+	path = libs/littlejs
+	url = https://github.com/yangruihan/LittleJS.git
+[submodule "libs/ljs"]
+	path = libs/ljs
+	url = https://github.com/yangruihan/l.js.git
