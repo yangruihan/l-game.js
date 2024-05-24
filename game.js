@@ -10,14 +10,39 @@ const code = `
 
 (def! draw-rect (fn* [pos size color angle] ($drawRect pos size color angle)))
 
+(def! vec2-add-x (fn* [vec value] 
+    (let* [x (.x vec)]
+        (.= vec 'x (+ x value))
+    )
+))
+
+(def! player {
+    :pos (new-v2 0 0)
+    :size (new-v2 1 1)
+    :color (new-color 1 0 0 1)
+    :angle 0
+    :speed 1
+    :rotation 0
+    :rotation-speed 1
+})
+(def! player-set-posx (fn* [x]
+    (.= (get player :pos) 'x x)
+))
+
 (def! init (fn* []))
 
-(def! update (fn* []))
+(def! update (fn* []
+    (player-set-posx (+ (.x (get player :pos)) 0.1))
+))
 
 (def! update-post (fn* []))
 
 (def! render (fn* []
-    (draw-rect (new-v2 1 1) (new-v2 1 1) (new-color 1 0 0 1) 0)
+    (draw-rect (get player :pos) 
+               (get player :size)
+               (get player :color)
+               (get player :angle)
+    )
 ))
 
 (def! render-post (fn* []))
