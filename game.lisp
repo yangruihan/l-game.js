@@ -24,6 +24,19 @@
 (def! v2-sub-y (fn* [v value] (v2-change v 'y - value)))
 (def! v2-mul-y (fn* [v value] (v2-change v 'y * value)))
 (def! v2-div-y (fn* [v value] (v2-change v 'y / value)))
+(def! v2-rotate (fn* [v anchor angle]
+    (let* [
+        x (.x v)
+        y (.y v)
+        sin-a (sin angle)
+        cos-a (cos angle)
+        ]
+        (new-v2
+            (+ (* cos-a (- x (.x anchor))) (* sin-a (- y (.y anchor))) (.x anchor))
+            (- (* sin-a (- x (.x anchor))) (* cos-a (- y (.y anchor))) (.y anchor))
+        )
+    )
+))
 
 ; --------------------
 
