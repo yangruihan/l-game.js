@@ -86,16 +86,27 @@
 ))
 ; --------------------
 
-; ----- player -----
-(def! player {
-    :pos (new-v2 0 0)
-    :size (new-v2 1 1)
-    :color (new-color 1 0 0 1)
-    :angle 0
-    :speed 0.1
-    :rotation 0
-    :rotation-speed 1
+(def! team {
+    :player 0
+    :enemy 1
 })
+
+; ----- player -----
+(def! new-player (fn* []
+    {
+        :team (get team :player)
+        :pos (new-v2 0 0)
+        :size (new-v2 1 1)
+        :color (new-color 1 0 0 1)
+        :angle 0
+        :speed 0.05
+        :rotation 0
+        :rotation-speed 0.05
+        :target nil
+    }
+))
+
+(def! player (new-player))
 
 (def! handle-player-input (fn* []
     (if (true? (is-key-down *key-left-arrow*))
@@ -128,6 +139,49 @@
 ))
 ;--------------------
 
+;----- enemy -----
+(def! new-enemy (fn* [pos size color angle speed health]
+    {
+        :team (get team :enemy)
+        :pos pos
+        :size size
+        :color color
+        :angle angle
+        :speed speed
+        :health health
+    }
+))
+
+(def! enemies (atom []))
+
+(def! spawn-enemy (fn* [pos size color angle speed health]
+    (let* [enemy (new-enemy pos size color angle speed health)]
+        (reset! enemies (cons enemy @enemies))
+    )
+))
+
+(spawn-enemy
+    (new-v2 1 1)
+    (new-v2 1 1)
+    (new-color 0 1 0 1)
+    0
+    0.05
+    100
+)
+
+(def! enemy-render (fn* [e]
+    (draw-rect (get e :pos) 
+               (get e :size)
+               (get e :color)
+               (get e :angle)
+    )
+))
+
+(def! enemies-render (fn* []
+    (apply enemy-render @enemies)
+))
+;-----------------
+
 (def! init (fn* []))
 
 (def! update (fn* []
@@ -138,9 +192,7 @@
 
 (def! render (fn* []
     (player-render)
-    
-    (draw-triangle (new-v2 0 0) (new-v2 1 0) (new-v2 0 1) (new-color 0 1 0 1))
-    (draw-circle (new-v2 0 0) 1 (new-color 0 0 1 1))
+    (enemies-render)
 ))
 
 (def! render-post (fn* []))
