@@ -160,15 +160,6 @@
     )
 ))
 
-(spawn-enemy
-    (new-v2 1 1)
-    (new-v2 1 1)
-    (new-color 0 1 0 1)
-    0
-    0.05
-    100
-)
-
 (def! enemy-render (fn* [e]
     (draw-rect (get e :pos) 
                (get e :size)
@@ -180,9 +171,22 @@
 (def! enemies-render (fn* []
     (apply enemy-render @enemies)
 ))
+
+(def! enemies-init (fn* []
+    (spawn-enemy
+        (new-v2 1 1)
+        (new-v2 1 1)
+        (new-color 0 1 0 1)
+        0
+        0.05
+        100
+    )
+))
 ;-----------------
 
-(def! init (fn* []))
+(def! init (fn* []
+    (enemies-init)
+))
 
 (def! update (fn* []
     (player-update)
